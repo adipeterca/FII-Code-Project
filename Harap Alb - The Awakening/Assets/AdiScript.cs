@@ -8,6 +8,8 @@ public class AdiScript : MonoBehaviour
     void Start()
     {
         // Adi comment.
+        // Matei comment.
+
     }
 
     // Update is called once per frame
