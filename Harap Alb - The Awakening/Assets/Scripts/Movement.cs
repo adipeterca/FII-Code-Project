@@ -4,123 +4,95 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    /// The speed for horizontal movement.
+    // The speed for horizontal movement.
     public float speed;
-    /// This adjusts the height of the jump.
+    // This adjusts the height of the jump.
     public float jumpPower;
-    /// This restricts the player from jumping to infinity.
-    public float jumpTime;
-    /// Jump sprite.
+    // Jump sprite.
     public Sprite jumpSprite;
-    /// Duck sprite.
+    // Duck sprite.
     public Sprite duckSprite;
-    /// Default sprite.
+    // Default sprite.
     public Sprite defaultSprite;
 
-    /// Horizontal movement variable.
-    float moveH;    
-    /// Vertical movement variable.
-    float moveV;
-    /// True if the player is in the duck position or false otherwise.
-    bool isDucking;
-    /// Variabile holding a private reference to the Rigidbody2D component of this game object.
+    // Horizontal movement variable.
+    float moveH;
+    // The Y axis value from the frame before the current one.
+    float lastY;
+    // Variabile holding a private reference to the Rigidbody2D component of this game object.
     Rigidbody2D playerRb;
-    /// A counter necessary for the jump time.
-    float currentTime;
-    ///  Reference to the Sprite Renderer component.
+    // Reference to the Sprite Renderer component.
     SpriteRenderer playerSprite;
-
-
+    // A necessary parameter for the SmoothDamp function.
+    Vector3 refVelocity;
+    // Was the "Jump" button pressed?
+    bool jump;
+    // Was the "Duck" button pressed?
+    bool duck;
+    // Can the player jump? (Is him on a ground surface?)
     bool canJump;
 
     private void Awake()
     {
         playerRb = GetComponent<Rigidbody2D>();
         playerSprite = GetComponent<SpriteRenderer>();
-        currentTime = 0;
-        isDucking = false;
+        lastY = transform.position.y;
+        jump = false;
+        duck = false;
         canJump = true;
-    }
-
-    //private void FixedUpdate()
-    //{
-    //    moveV = Input.GetAxisRaw("Vertical");
-
-    //    currentTime -= Time.deltaTime;
-
-    //    if (moveV == -1 && currentTime <= 0)
-    //    {
-    //        playerSprite.sprite = duckSprite;
-    //        isDucking = true;
-    //        Debug.Log("Duck");
-    //    }
-    //    else
-    //    {
-    //        isDucking = false;
-    //        if(moveV == 0 && currentTime <=0)
-    //            playerSprite.sprite = defaultSprite;
-    //        if (currentTime <= 0 && moveV == 1)
-    //        {
-    //            playerRb.AddForce(new Vector2(0, moveV * jumpPower));
-    //            playerSprite.sprite = jumpSprite;
-    //            currentTime = jumpTime;
-    //            Debug.Log("Jump");
-    //        }   
-    //    }
-    //}
-
-    private void FixedUpdate()
-    {
-        moveV = Input.GetAxisRaw("Vertical");
-
-        if (moveV != -1)
-        {
-            isDucking = false;
-            if (!canJump)
-                playerSprite.sprite = defaultSprite;
-            Debug.Log("He is not ducking.");
-        }
-
-        if (canJump)
-        {
-            if (moveV == -1)
-            {
-                playerSprite.sprite = duckSprite;
-                isDucking = true;
-                canJump = false;
-                Debug.Log("Duck");
-            }
-            else
-            {
-                playerSprite.sprite = defaultSprite;
-                if (moveV == 1)
-                {
-                    playerRb.AddForce(new Vector2(0, moveV * jumpPower));
-                    playerSprite.sprite = jumpSprite;
-                    canJump = false;
-                    Debug.Log("Jump");
-                }
-            }
-        }
+        refVelocity = Vector3.zero;
     }
 
     private void Update()
     {
         moveH = Input.GetAxisRaw("Horizontal");
-        if (moveH != 0 && !isDucking)
+        
+        if (Input.GetButtonDown("Jump") && canJump && lastY == transform.position.y)
         {
-            transform.Translate(new Vector3(moveH * speed * Time.deltaTime, 0, 0));
-            Debug.Log("Moved along the horizontal axis.");
+            jump = true;
+            playerSprite.sprite = jumpSprite;
+        }
+        else if (Input.GetButtonDown("Duck") && canJump && lastY == transform.position.y)
+        {
+            duck = true;
+            playerRb.velocity = Vector3.zero;
+            playerSprite.sprite = duckSprite;
+        }
+        if (Input.GetButtonUp("Duck"))
+        {
+            duck = false;
+            if (canJump)
+                playerSprite.sprite = defaultSprite;
+            else
+                playerSprite.sprite = jumpSprite;
         }
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void FixedUpdate()
     {
-        if(collision.CompareTag("Platform"))
+        if (!duck)
         {
-            canJump = true;
-            Debug.Log("Collision detected.");
+            Vector3 targetVelocity = new Vector2(moveH * speed, playerRb.velocity.y);
+            playerRb.velocity = Vector3.SmoothDamp(playerRb.velocity, targetVelocity, ref refVelocity, 0.05f);
         }
+        if (jump && lastY == transform.position.y)
+        {
+            Vector3 targetVelocity = new Vector2(playerRb.velocity.x, jumpPower);
+            playerRb.velocity = Vector3.SmoothDamp(playerRb.velocity, targetVelocity, ref refVelocity, 0.05f);
+            jump = false;
+            canJump = false;
+        }
+        lastY = transform.position.y;
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Platform"))
+        {
+            playerSprite.sprite = defaultSprite;
+            canJump = true;
+            jump = false;
+            duck = false;
+        }
+    }
 }
