@@ -47,7 +47,7 @@ public class Movement : MonoBehaviour
     {
         moveH = Input.GetAxisRaw("Horizontal");
         
-        if (Input.GetButtonDown("Jump") && canJump && lastY == transform.position.y)
+        if (Input.GetButtonDown("Jump") && canJump)
         {
             jump = true;
             playerSprite.sprite = jumpSprite;
@@ -75,7 +75,7 @@ public class Movement : MonoBehaviour
             Vector3 targetVelocity = new Vector2(moveH * speed, playerRb.velocity.y);
             playerRb.velocity = Vector3.SmoothDamp(playerRb.velocity, targetVelocity, ref refVelocity, 0.05f);
         }
-        if (jump && lastY == transform.position.y)
+        if (jump)
         {
             Vector3 targetVelocity = new Vector2(playerRb.velocity.x, jumpPower);
             playerRb.velocity = Vector3.SmoothDamp(playerRb.velocity, targetVelocity, ref refVelocity, 0.05f);
@@ -93,6 +93,13 @@ public class Movement : MonoBehaviour
             canJump = true;
             jump = false;
             duck = false;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Platform"))
+        {
+            canJump = false;
         }
     }
 }

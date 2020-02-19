@@ -902,8 +902,8 @@ GameObject:
   - component: {fileID: 940506807}
   - component: {fileID: 940506805}
   - component: {fileID: 940506810}
-  - component: {fileID: 940506806}
   - component: {fileID: 940506811}
+  - component: {fileID: 940506812}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -928,32 +928,6 @@ MonoBehaviour:
   jumpSprite: {fileID: 21300000, guid: 1bbe205bf10b99742b3d0725b7d7e1a3, type: 3}
   duckSprite: {fileID: 21300000, guid: 23bfec1940c6a6a4d94c8afbb4305168, type: 3}
   defaultSprite: {fileID: 21300000, guid: 6717beb0f5f1abd459912bc60df6ddfe, type: 3}
---- !u!61 &940506806
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 940506804}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 6200000, guid: 112e55704abbed24db5b8506c4682939, type: 2}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.31508183, y: 1}
-  m_EdgeRadius: 0
 --- !u!50 &940506807
 Rigidbody2D:
   serializedVersion: 4
@@ -1061,13 +1035,29 @@ CircleCollider2D:
   m_GameObject: {fileID: 940506804}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 112e55704abbed24db5b8506c4682939, type: 2}
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.45}
+  m_Offset: {x: 0, y: -0.4}
   serializedVersion: 2
   m_Radius: 0.12
+--- !u!70 &940506812
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940506804}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: 112e55704abbed24db5b8506c4682939, type: 2}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.042027548, y: 0}
+  m_Size: {x: 0.3868002, y: 1}
+  m_Direction: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
