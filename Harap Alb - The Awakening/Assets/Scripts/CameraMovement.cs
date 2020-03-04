@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    public GameObject camera;
+    public GameObject player;
 
     Vector3 offset;
 
     private void Awake()
     {
-        offset = transform.position - camera.transform.position;
+        offset = - transform.position + player.transform.position;
     }
 
     private void LateUpdate()
     {
-        camera.transform.position = transform.position - offset;
+        transform.position = player.transform.position - offset;
     }
 }

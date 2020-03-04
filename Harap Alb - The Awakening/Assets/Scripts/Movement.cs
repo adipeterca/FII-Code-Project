@@ -52,13 +52,14 @@ public class Movement : MonoBehaviour
             jump = true;
             playerSprite.sprite = jumpSprite;
         }
-        else if (Input.GetButtonDown("Duck") && canJump /*&& lastY == transform.position.y*/)
+        else if (Input.GetButtonDown("Duck") && canJump)
         {
             duck = true;
             playerRb.velocity = Vector3.zero;
             playerSprite.sprite = duckSprite;
         }
-        if (Input.GetButtonUp("Duck"))
+
+        if (Input.GetButtonUp("Duck") && duck)
         {
             duck = false;
             if (canJump)
