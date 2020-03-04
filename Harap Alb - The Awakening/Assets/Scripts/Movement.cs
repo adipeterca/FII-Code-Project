@@ -45,6 +45,9 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
+        if (PauseMenu.gameIsPaused)
+            return;
+
         moveH = Input.GetAxisRaw("Horizontal");
         
         if (Input.GetButtonDown("Jump") && canJump)
@@ -71,6 +74,9 @@ public class Movement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (PauseMenu.gameIsPaused)
+            return;
+
         if (!duck)
         {
             Vector3 targetVelocity = new Vector2(moveH * speed, playerRb.velocity.y);

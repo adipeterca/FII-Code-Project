@@ -11,6 +11,9 @@ public class SaveLoadGame : MonoBehaviour
     bool canSave = false;
     void Update()
     {
+        if (PauseMenu.gameIsPaused)
+            return;
+
         if (Input.GetKeyDown(KeyCode.P) && canSave)
         {
             SaveGame.Save(playerStats);
@@ -21,6 +24,7 @@ public class SaveLoadGame : MonoBehaviour
         {
             PlayerData data = SaveGame.Load();
             transform.position = new Vector3(data.position[0], data.position[1], data.position[2]);
+            Debug.Log("Loaded game.");
         }
     }
 
