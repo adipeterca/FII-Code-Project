@@ -49,6 +49,15 @@ public class Movement : MonoBehaviour
             return;
 
         moveH = Input.GetAxisRaw("Horizontal");
+
+        if (moveH < 0)
+        {
+            Debug.Log(moveH);
+            Debug.Log(transform.localScale.x);
+        }
+        if ((moveH > 0 && transform.localScale.x < 0) || (moveH < 0 && transform.localScale.x > 0))
+            transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
+
         
         if (Input.GetButtonDown("Jump") && canJump)
         {
