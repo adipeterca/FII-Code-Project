@@ -8,23 +8,19 @@ public class Movement : MonoBehaviour
     public float speed;
     // This adjusts the height of the jump.
     public float jumpPower;
-    // Jump sprite.
-    public Sprite jumpSprite;
-    // Duck sprite.
-    public Sprite duckSprite;
-    // Default sprite.
-    public Sprite defaultSprite;
 
     // Horizontal movement variable.
     float moveH;
-    // The Y axis value from the frame before the current one.
-    float lastY;
     // Variabile holding a private reference to the Rigidbody2D component of this game object.
     Rigidbody2D playerRb;
-    // Reference to the Sprite Renderer component.
-    SpriteRenderer playerSprite;
     // A necessary parameter for the SmoothDamp function.
     Vector3 refVelocity;
+    // Animator reference.
+    Animator anim;
+    // CapsuleCollider2D reference.
+    CapsuleCollider2D capsule2d;
+    // CircleCollider2D reference.
+    CircleCollider2D circle2d;
     // Was the "Jump" button pressed?
     bool jump;
     // Was the "Duck" button pressed?
@@ -35,8 +31,9 @@ public class Movement : MonoBehaviour
     private void Awake()
     {
         playerRb = GetComponent<Rigidbody2D>();
-        playerSprite = GetComponent<SpriteRenderer>();
-        lastY = transform.position.y;
+        anim = GetComponent<Animator>();
+        capsule2d = GetComponent<CapsuleCollider2D>();
+        circle2d = GetComponent<CircleCollider2D>();
         jump = false;
         duck = false;
         canJump = true;
@@ -50,11 +47,7 @@ public class Movement : MonoBehaviour
 
         moveH = Input.GetAxisRaw("Horizontal");
 
-        if (moveH < 0)
-        {
-            Debug.Log(moveH);
-            Debug.Log(transform.localScale.x);
-        }
+        anim.SetBool("Walking", moveH != 0 ? true : false);
         if ((moveH > 0 && transform.localScale.x < 0) || (moveH < 0 && transform.localScale.x > 0))
             transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
 
@@ -62,23 +55,28 @@ public class Movement : MonoBehaviour
         if (Input.GetButtonDown("Jump") && canJump)
         {
             jump = true;
-            playerSprite.sprite = jumpSprite;
+            anim.SetBool("Jumping", true);
         }
         else if (Input.GetButtonDown("Duck") && canJump)
         {
             duck = true;
+            anim.SetBool("Crouching", true);
+
+            capsule2d.size -= new Vector2(0, 1);
+            capsule2d.offset -= new Vector2(0, 0.5f);
             playerRb.velocity = Vector3.zero;
-            playerSprite.sprite = duckSprite;
         }
 
         if (Input.GetButtonUp("Duck") && duck)
         {
             duck = false;
-            if (canJump)
-                playerSprite.sprite = defaultSprite;
-            else
-                playerSprite.sprite = jumpSprite;
+            capsule2d.size += new Vector2(0, 1);
+            capsule2d.offset += new Vector2(0, 0.5f);
+            anim.SetBool("Crouching", false);
         }
+
+        if (!duck && canJump && !jump && Input.GetButtonDown("Space_Jump"))
+            anim.SetTrigger("Attack");
     }
 
     private void FixedUpdate()
@@ -98,17 +96,16 @@ public class Movement : MonoBehaviour
             jump = false;
             canJump = false;
         }
-        lastY = transform.position.y;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Platform"))
         {
-            playerSprite.sprite = defaultSprite;
             canJump = true;
             jump = false;
-            duck = false;
+            duck = false; anim.SetBool("Jumping", false);
+
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
