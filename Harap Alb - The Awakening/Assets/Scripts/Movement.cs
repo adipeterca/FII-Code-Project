@@ -46,7 +46,7 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
-        if (PauseMenu.gameIsPaused)
+        if (PauseMenu.gameIsPaused || PlayerStats.levelUpMenuActive)
             return;
 
         moveH = Input.GetAxisRaw("Horizontal");
@@ -85,7 +85,7 @@ public class Movement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (PauseMenu.gameIsPaused)
+        if (PauseMenu.gameIsPaused || PlayerStats.levelUpMenuActive)
             return;
 
         if (!duck)

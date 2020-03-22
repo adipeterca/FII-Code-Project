@@ -13,7 +13,7 @@ public class UI_Update : MonoBehaviour
     private void Update()
     {
         score.text = player.points + " / 1000";
-        health.text = player.health + " / 100";
+        health.text = player.health + " / " + (player.maxHealth + 100);
         lives.text = player.lifeCount.ToString();
     }
 }

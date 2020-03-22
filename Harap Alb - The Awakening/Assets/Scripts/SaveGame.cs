@@ -10,7 +10,6 @@ public static class SaveGame {
 
         // This is the location where the save files will go.   
         string path = Application.persistentDataPath + "/HarapAlb.save";
-        Debug.Log("Path: " + path);
         // NEEDS DOCUMENTATION ADDED!!!!
         FileStream fileStream = new FileStream(path, FileMode.Create);
 
