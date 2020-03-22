@@ -7,6 +7,8 @@ TagManager:
   - Platform
   - Campfire
   - Water
+  - Enemy
+  - PickUp
   layers:
   - Default
   - TransparentFX
@@ -16,8 +18,8 @@ TagManager:
   - UI
   - 
   - 
-  - Ground
-  - Player
+  - 
+  - 
   - 
   - 
   - 
@@ -41,9 +43,18 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background_Image
+    uniqueID: 2491645191
+    locked: 0
   - name: Background
     uniqueID: 2170024183
     locked: 0
+  - name: Behind The Player
+    uniqueID: 2437989437
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: In Front of Player
+    uniqueID: 3758814943
     locked: 0

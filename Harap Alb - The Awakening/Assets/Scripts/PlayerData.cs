@@ -7,18 +7,18 @@ public class PlayerData {
     
     // Maximum health of the player.
     public int maxHp;
-    // The power skill of the player.
-    public float power;
+    // The attack power skill of the player.
+    public int atkPower;
     // The speed of the player.
-    public float speed;
+    public int speed;
     // The number of lives remaining.
     public int lives;
     // Current health.
     public int currentHp;
+    // Number of points.
+    public int points;
     // The position for our player.
     public float[] position;
-    // Is our player facing right?
-    public bool isFacingRight;
 
     // Default constructor.
     public PlayerData(PlayerStats playerReference)
@@ -27,5 +27,14 @@ public class PlayerData {
         position[0] = playerReference.position[0];
         position[1] = playerReference.position[1];
         position[2] = playerReference.position[2];
+
+        maxHp = playerReference.maxHealth;
+        atkPower = playerReference.atkPower;
+        speed = playerReference.speed;
+
+        lives = playerReference.lifeCount;
+        currentHp = playerReference.health;
+
+        points = playerReference.points;
     }
 }

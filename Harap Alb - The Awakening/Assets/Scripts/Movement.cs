@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    // The speed for horizontal movement.
-    public float speed;
-    // This adjusts the height of the jump.
-    public float jumpPower;
+    // Reference to the PlayerStats script.
+    public PlayerStats stats;
 
+    // The speed for horizontal movement.
+    float speed;
+    // This adjusts the height of the jump.
+    float jumpPower;
     // Horizontal movement variable.
     float moveH;
     // Variabile holding a private reference to the Rigidbody2D component of this game object.
@@ -34,6 +36,8 @@ public class Movement : MonoBehaviour
         anim = GetComponent<Animator>();
         capsule2d = GetComponent<CapsuleCollider2D>();
         circle2d = GetComponent<CircleCollider2D>();
+        speed = stats.speed;
+        jumpPower = stats.jumpPower;
         jump = false;
         duck = false;
         canJump = true;

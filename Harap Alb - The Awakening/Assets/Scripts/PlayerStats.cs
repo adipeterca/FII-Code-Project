@@ -9,7 +9,9 @@ public class PlayerStats : MonoBehaviour
     // Skills: max health, attack power and speed.
     public int maxHealth;
     public int atkPower;
-    public int speed;   // this needs to be the same as the one in Movement script. -------------TO DO-----------------
+    public int speed;
+    // Jump power.
+    public int jumpPower;
     // Currect health.
     public int health;
     // Lives counter.
@@ -18,20 +20,12 @@ public class PlayerStats : MonoBehaviour
     public int points;  // needs a function called addPoints(int amount) which also check to see if the necessary points 
                         // (default 1000) to level up have been collected.
                         // This needs to be done until points < 1000. (A boss could give the player 3000 points)
+
+    
     private void Awake()
     {
         position = new float[3];
     }
-
-    /* public void TakeDamage(int amount)
-    {
-        health -= amount;
-        if (health <=0) 
-        {
-            lifeCount--;
-            SaveGame.Load();
-        }
-    }*/
 
     void Update()
     {
@@ -44,5 +38,33 @@ public class PlayerStats : MonoBehaviour
 
         }
         // else EndGame();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("PickUp"))
+        {
+            AddPoints(collision.gameObject.GetComponent<EXP_Stats>().points);
+            Destroy(collision.gameObject);
+        }
+    }
+
+    public void AddPoints(int amount)
+    {
+        points += amount;
+        while (points >= 1000)
+        {
+            // level up menu pops up
+        }
+    }
+    public void TakeDamage(int amount)
+    {
+        health -= amount;
+        if (health <= 0)
+        {
+            lifeCount--;
+            // anim.Death();
+            SaveGame.Load();
+        }
     }
 }
