@@ -8,19 +8,20 @@ public class SaveLoadGame : MonoBehaviour
     public PlayerStats playerStats;
 
     // Can the player save? (Is him near a campfire?)
-    bool canSave = false;
+    public static bool canSave = false;
+
     void Update()
     {
         if (PauseMenu.gameIsPaused)
             return;
 
-        if (Input.GetKeyDown(KeyCode.P) && canSave)
+        if (Input.GetKeyDown(KeyCode.P) && canSave && !PlayerStats.death)
         {
             SaveGame.Save(playerStats);
             canSave = false;
             Debug.Log("Saved game.");
         }
-        else if(Input.GetKeyDown(KeyCode.L))
+        else if(Input.GetKeyDown(KeyCode.L) && !PlayerStats.death)  // The same as you would load a previous save
         {
             PlayerData data = SaveGame.Load();
 
@@ -30,12 +31,27 @@ public class SaveLoadGame : MonoBehaviour
             playerStats.atkPower = data.atkPower;
             playerStats.speed = data.speed;
 
-            playerStats.health = data.currentHp;
             playerStats.lifeCount = data.lives;
+            playerStats.health = data.currentHp;
 
             playerStats.points = data.points;
+            Debug.Log("Loaded game by pressing L.");
+        }
+        else if (PlayerStats.death) // This only happends if the player dies
+        {   
+            // Loads the game to the last save at a campfire
+            PlayerData data = SaveGame.Load();
 
-            Debug.Log("Loaded game.");
+            // Respawn at the campfire
+            transform.position = new Vector3(data.position[0], data.position[1], data.position[2]);
+
+            playerStats.lifeCount = data.lives - 1;
+            playerStats.health = data.maxHp + 100;
+
+            SaveGame.Save(playerStats);
+
+            PlayerStats.death = false;
+            Debug.Log("You died.");
         }
     }
 

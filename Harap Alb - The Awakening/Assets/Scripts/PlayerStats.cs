@@ -24,6 +24,8 @@ public class PlayerStats : MonoBehaviour
     public GameObject levelUpMenu;
     public static bool levelUpMenuActive = false;
 
+    public static bool death = false;
+
     public Text atkText;
     public Text maxHpText;
     public Text speedText;
@@ -40,9 +42,12 @@ public class PlayerStats : MonoBehaviour
     {
         if (lifeCount >= 0)
         {
-            position[0] = transform.position.x;
-            position[1] = transform.position.y;
-            position[2] = transform.position.z;
+            if (SaveLoadGame.canSave && Input.GetKeyDown(KeyCode.P)) 
+            {
+                position[0] = transform.position.x;
+                position[1] = transform.position.y;
+                position[2] = transform.position.z;
+            }
             if (Input.GetKeyDown(KeyCode.I))
             {
                 if (levelUpMenuActive == true)
@@ -107,10 +112,9 @@ public class PlayerStats : MonoBehaviour
         health -= amount;
         if (health <= 0)
         {
-            lifeCount--;
+            death = true;
             // updateLifeCount();
             // anim.Death();
-            SaveGame.Load();
         }
     }
 
