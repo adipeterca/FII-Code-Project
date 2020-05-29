@@ -12,7 +12,7 @@ public class PauseMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && PlayerStats.levelUpMenuActive == false)
+        if (Input.GetKeyDown(KeyCode.Escape) && PlayerStats.levelUpMenuActive == false && CameraMovement.GetMinimapStatus() == false)
         {
             if (gameIsPaused)
                 Resume();

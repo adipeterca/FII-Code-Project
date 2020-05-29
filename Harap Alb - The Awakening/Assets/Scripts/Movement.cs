@@ -6,9 +6,14 @@ public class Movement : MonoBehaviour
 {
     // Reference to the PlayerStats script.
     public PlayerStats stats;
+    // AudioClips array.
+    public AudioClip[] audioClip;
 
-    // The speed for horizontal movement.
-    float speed;
+    public static bool isAttacking;
+
+    // Referece to audio source component, used to play sounds.
+    AudioSource audioSource;
+    
     // This adjusts the height of the jump.
     float jumpPower;
     // Horizontal movement variable.
@@ -30,13 +35,15 @@ public class Movement : MonoBehaviour
     // Can the player jump? (Is him on a ground surface?)
     bool canJump;
 
+    public static bool dontMoveCamera;
+
     private void Awake()
     {
         playerRb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         capsule2d = GetComponent<CapsuleCollider2D>();
         circle2d = GetComponent<CircleCollider2D>();
-        speed = stats.speed;
+        audioSource = GetComponent<AudioSource>();
         jumpPower = stats.jumpPower;
         jump = false;
         duck = false;
@@ -46,20 +53,23 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
-        if (PauseMenu.gameIsPaused || PlayerStats.levelUpMenuActive)
+        if (PauseMenu.gameIsPaused || PlayerStats.levelUpMenuActive || CameraMovement.GetMinimapStatus() || PlayerStats.death)
             return;
 
         moveH = Input.GetAxisRaw("Horizontal");
-
         anim.SetBool("Walking", moveH != 0 ? true : false);
         if ((moveH > 0 && transform.localScale.x < 0) || (moveH < 0 && transform.localScale.x > 0))
+        {
+            dontMoveCamera = true;
             transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
-
+            transform.position += new Vector3(transform.localScale.x, 0, 0);
+        }
         
         if (Input.GetButtonDown("Jump") && canJump)
         {
             jump = true;
             anim.SetBool("Jumping", true);
+            PlaySound(0);
         }
         else if (Input.GetButtonDown("Duck") && canJump)
         {
@@ -80,17 +90,21 @@ public class Movement : MonoBehaviour
         }
 
         if (!duck && canJump && !jump && Input.GetButtonDown("Space_Jump"))
+        {
+            isAttacking = true;
             anim.SetTrigger("Attack");
+            PlaySound(1);
+        }
     }
 
     private void FixedUpdate()
     {
-        if (PauseMenu.gameIsPaused || PlayerStats.levelUpMenuActive)
+        if (PauseMenu.gameIsPaused || PlayerStats.levelUpMenuActive || CameraMovement.GetMinimapStatus() || PlayerStats.death)
             return;
 
         if (!duck)
         {
-            Vector3 targetVelocity = new Vector2(moveH * speed, playerRb.velocity.y);
+            Vector3 targetVelocity = new Vector2(moveH * stats.speed, playerRb.velocity.y);
             playerRb.velocity = Vector3.SmoothDamp(playerRb.velocity, targetVelocity, ref refVelocity, 0.05f);
         }
         if (jump)
@@ -102,19 +116,27 @@ public class Movement : MonoBehaviour
         }
     }
 
+    private void PlaySound(int soundToPlay)
+    {
+        audioSource.Stop();
+        audioSource.clip = audioClip[soundToPlay];
+        audioSource.Play();
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Platform"))
+        if (collision.CompareTag("Platform") || collision.CompareTag("Bridge"))
         {
             canJump = true;
             jump = false;
-            duck = false; anim.SetBool("Jumping", false);
-
+            duck = false;
+            anim.SetBool("Jumping", false);
         }
     }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Platform"))
+        if (collision.CompareTag("Platform") && !collision.CompareTag("Bridge"))
         {
             canJump = false;
         }

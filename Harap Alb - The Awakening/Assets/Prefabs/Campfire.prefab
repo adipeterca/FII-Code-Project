@@ -12,12 +12,13 @@ GameObject:
   - component: {fileID: 5142883748678994063}
   - component: {fileID: 5142883748678994048}
   - component: {fileID: 7080313523054811441}
+  - component: {fileID: 793362203}
   m_Layer: 0
   m_Name: Campfire
   m_TagString: Campfire
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &5142883748678994062
 Transform:
@@ -128,3 +129,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
+--- !u!114 &793362203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5142883748678994049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fbe49660c2beb240a949a37a4aa4e37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

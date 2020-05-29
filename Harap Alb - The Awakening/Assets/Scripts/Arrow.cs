@@ -4,19 +4,27 @@ using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
-    public Archer enemy;
-    public PlayerStats player;
+    PlayerStats player;
+
+    private void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerStats>();
+        Destroy(gameObject, 10);
+    }
 
     private void Update()
     {
-        transform.position += new Vector3((float)enemy.direction, 0, 0) * Time.deltaTime;
+        transform.position += new Vector3(transform.rotation.z == 0f ? 2f : -2f, 0, 0) * Time.deltaTime;
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            player.TakeDamage(enemy.attack);
+            player.TakeDamage(25);
             Destroy(gameObject);
         }
+        else
+            Destroy(gameObject);
     }
 }

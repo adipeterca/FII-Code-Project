@@ -7,8 +7,11 @@ TagManager:
   - Platform
   - Campfire
   - Water
-  - Enemy
   - PickUp
+  - Bridge
+  - Forest Boss
+  - Caterpillar
+  - Archer
   layers:
   - Default
   - TransparentFX

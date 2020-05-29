@@ -5,6 +5,9 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour
 {
     public GameObject player;
+    public GameObject minimap;
+
+    static bool minimapActive = false;
 
     Vector3 offset;
 
@@ -13,8 +16,41 @@ public class CameraMovement : MonoBehaviour
         offset = - transform.position + player.transform.position;
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.M) && PauseMenu.gameIsPaused == false && PlayerStats.levelUpMenuActive == false && playerIsIdle() == true)
+        {
+            if (minimapActive == false)
+            {
+                minimapActive = true;
+                minimap.SetActive(true);
+            }
+            else
+            {
+                minimapActive = false;
+                minimap.SetActive(false);
+            }
+        }
+    }
+
     private void LateUpdate()
     {
-        transform.position = player.transform.position - offset;
+        if (Movement.dontMoveCamera == true)
+        {
+            Movement.dontMoveCamera = false;
+            offset += new Vector3(player.transform.localScale.x, 0, 0);
+        }
+        else
+            transform.position = player.transform.position - offset;
+    }
+
+    static public bool GetMinimapStatus()
+    {
+        return minimapActive;
+    }
+    
+    private bool playerIsIdle()
+    {
+        return player.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Player_Idle");
     }
 }
